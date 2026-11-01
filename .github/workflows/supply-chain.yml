@@ -76,7 +76,7 @@ jobs:
         run: mvn --batch-mode --no-transfer-progress -DskipTests dependency:go-offline
 
       - name: OWASP Dependency-Check
-        uses: dependency-check/Dependency-Check_Action@3102a65fd5f36d0000297576acc56a475b0de98d # v4.1.0
+        uses: dependency-check/Dependency-Check_Action@1e54355a8b4c8abaa8cc7d0b70aa655a3bb15a6c # v4.1.0
         with:
           project: OmniStream
           path: '.'
