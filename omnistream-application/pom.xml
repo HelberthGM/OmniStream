@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>co.omnistream</groupId>
+        <artifactId>omnistream-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>omnistream-application</artifactId>
+    <name>OmniStream :: Application</name>
+    <description>
+        Casos de uso / servicios de aplicacion de OmniStream. Orquesta el dominio y los patrones
+        P-rS para indexar recursos, buscar/filtrar y resolver reproducciones.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>co.omnistream</groupId>
+            <artifactId>omnistream-domain</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

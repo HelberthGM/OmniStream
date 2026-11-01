@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>co.omnistream</groupId>
+    <artifactId>omnistream-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>OmniStream :: Parent</name>
+    <description>
+        Plataforma auto-hospedada de gestion multimedia (almacenar, categorizar,
+        consultar y reproducir) construida sobre el framework de Patrones re-Significados (P-rS).
+    </description>
+
+    <!--
+        ARQUITECTURA DE MODULOS (alineada con el documento ArchiMate de OmniStream)
+        ===========================================================================
+        omnistream-patterns     -> Framework base: los Patrones re-Significados (P-rS) del
+                                    profesor Sandro Bolanos. Es el "sistema base" desde el cual
+                                    se invocan y extienden los patrones (ver Conclusiones del paper).
+        omnistream-domain       -> Modelo de dominio de OmniStream (recursos multimedia, metadatos,
+                                    usuarios, categorias) + interfaces/abstracciones que MATERIALIZAN
+                                    los P-rS para resolver los problemas reales del sistema.
+        omnistream-application  -> Casos de uso / servicios de aplicacion (orquestacion).
+        omnistream-api          -> Capa de exposicion: API REST (Spring Boot) multiplataforma
+                                    (Web, Desktop, Mobile) con control de acceso.
+    -->
+
+    <modules>
+        <module>omnistream-patterns</module>
+        <module>omnistream-domain</module>
+        <module>omnistream-application</module>
+        <module>omnistream-api</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>3.3.5</spring.boot.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Modulos internos -->
+            <dependency>
+                <groupId>co.omnistream</groupId>
+                <artifactId>omnistream-patterns</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>co.omnistream</groupId>
+                <artifactId>omnistream-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>co.omnistream</groupId>
+                <artifactId>omnistream-application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- Spring Boot BOM: alinea versiones de todo el ecosistema Spring -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

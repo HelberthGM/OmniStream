@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>co.omnistream</groupId>
+        <artifactId>omnistream-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>omnistream-domain</artifactId>
+    <name>OmniStream :: Domain</name>
+    <description>
+        Modelo de dominio de OmniStream. Define recursos multimedia, metadatos, categorias y
+        usuarios, y MATERIALIZA los Patrones re-Significados (P-rS) para los problemas reales:
+        indexacion, extraccion de metadatos, busqueda, reproduccion y control de acceso.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>co.omnistream</groupId>
+            <artifactId>omnistream-patterns</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

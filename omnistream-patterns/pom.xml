@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>co.omnistream</groupId>
+        <artifactId>omnistream-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>omnistream-patterns</artifactId>
+    <name>OmniStream :: Patterns (P-rS Framework)</name>
+    <description>
+        Framework base de Patrones re-Significados (P-rS) de Sandro J. Bolanos.
+        Contiene las abstracciones genericas (paquete 'modelo') reutilizables por todo OmniStream.
+        Organizado en tres familias: creacion, estructuracion e interaccion.
+    </description>
+
+</project>

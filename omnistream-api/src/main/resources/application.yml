@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: omnistream-api
+
+# OmniStream es auto-hospedado y orientado a funcionamiento offline.
+# La persistencia (SQLite/JPA) se incorpora en una iteracion posterior; por ahora el
+# registro de recursos vive en memoria (Patron-R Instalacion).
+omnistream:
+  storage:
+    mode: local
+    offline-first: true

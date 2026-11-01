@@ -1,0 +1,23 @@
+# Maven
+target/
+.m2repo/
+.verify/
+.smoke/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs y datos locales auto-hospedados
+*.log
+*.sqlite
+*.db
+/data/
