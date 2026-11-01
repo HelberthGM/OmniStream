@@ -15,7 +15,7 @@ reproducir recursos (video, imagen, audio, texto) de forma autónoma, segura y p
 
 | Área | Elección | Motivo |
 |------|----------|--------|
-| Lenguaje | **Java 21 (LTS)** | Estable, ampliamente conocido por el equipo |
+| Lenguaje | **Java 25 (LTS)** | Estable, ampliamente conocido por el equipo |
 | Build | **Maven multi-módulo** | Separa responsabilidades y facilita el trabajo en equipo |
 | API | **Spring Boot 3** (módulo `api`) | Estándar REST, bien documentado |
 | Persistencia | SQLite + JPA *(iteración siguiente)* | Offline / auto-hospedado |
@@ -85,7 +85,7 @@ Luego, **Selección** permite buscar/filtrar y **Maquinación** gobierna la repr
 
 ## Compilar y ejecutar
 
-> Requiere JDK 21+ y Maven 3.9+. El build de la API necesita acceso a Maven Central para
+> Requiere JDK 25+ y Maven 3.9+. El build de la API necesita acceso a Maven Central para
 > descargar Spring Boot la primera vez.
 
 ```bash
@@ -145,7 +145,7 @@ El repositorio incluye automatización que se ejecuta en cada `push` y `pull_req
 
 | Workflow | Archivo | Qué hace | Ejes que cubre |
 |----------|---------|----------|----------------|
-| **CI** | `.github/workflows/ci.yml` | Build + tests (`mvn verify`) en matriz JDK 21 y 25; cachea Maven; sube reportes | Calidad, Confiabilidad, Velocidad, Trazabilidad |
+| **CI** | `.github/workflows/ci.yml` | Build + tests (`mvn verify`) con JDK 25; cachea Maven; sube reportes | Calidad, Confiabilidad, Velocidad, Trazabilidad |
 | **CodeQL** | `.github/workflows/codeql.yml` | Análisis estático de seguridad del código Java (push, PR y semanal) | Seguridad, Calidad |
 | **Supply Chain** | `.github/workflows/supply-chain.yml` | `dependency-review` en PRs + OWASP Dependency-Check programado | Seguridad (cadena de suministro) |
 | **Dependabot** | `.github/dependabot.yml` | PRs automáticos de actualización de dependencias Maven y Actions | Seguridad, Mantenibilidad |

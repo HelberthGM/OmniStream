@@ -4,7 +4,7 @@
 # Objetivos cubiertos:
 #   - Calidad:        build + tests + verificaciones en cada cambio.
 #   - Seguridad:      permisos minimos, hardening del runner, sin secretos.
-#   - Confiabilidad:  matriz de JDK (21 LTS y 25), fail-fast desactivado, timeouts.
+#   - Confiabilidad:  matriz de JDK 25, fail-fast desactivado, timeouts.
 #   - Velocidad:      cache de Maven, cancelacion de ejecuciones redundantes.
 #   - Trazabilidad:   artefactos de reportes + resumen en el job summary.
 # -----------------------------------------------------------------------------
@@ -38,7 +38,7 @@ jobs:
       # para darnos informacion completa en un solo ciclo.
       fail-fast: false
       matrix:
-        java: ['21', '25']
+        java: ['25']
 
     steps:
       # Seguridad: endurece el runner (egress controlado, deteccion de
