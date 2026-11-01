@@ -139,6 +139,28 @@ co.omnistream.patterns
 
 ---
 
+## CI/CD (GitHub Actions)
+
+El repositorio incluye automatización que se ejecuta en cada `push` y `pull_request` a `main`:
+
+| Workflow | Archivo | Qué hace | Ejes que cubre |
+|----------|---------|----------|----------------|
+| **CI** | `.github/workflows/ci.yml` | Build + tests (`mvn verify`) en matriz JDK 21 y 25; cachea Maven; sube reportes | Calidad, Confiabilidad, Velocidad, Trazabilidad |
+| **CodeQL** | `.github/workflows/codeql.yml` | Análisis estático de seguridad del código Java (push, PR y semanal) | Seguridad, Calidad |
+| **Supply Chain** | `.github/workflows/supply-chain.yml` | `dependency-review` en PRs + OWASP Dependency-Check programado | Seguridad (cadena de suministro) |
+| **Dependabot** | `.github/dependabot.yml` | PRs automáticos de actualización de dependencias Maven y Actions | Seguridad, Mantenibilidad |
+
+**Principios de diseño aplicados:**
+
+- **Calidad** → nada se integra sin pasar build + tests + análisis estático.
+- **Seguridad** → `permissions` mínimos por job, runner endurecido (`harden-runner`), SHA de las actions fijados (evita *tag hijacking*), escaneo de dependencias y CodeQL. No se usan secretos.
+- **Confiabilidad** → matriz de JDK con `fail-fast: false`, `timeout-minutes` en todos los jobs, re-escaneos programados.
+- **Velocidad** → caché de `~/.m2`, `concurrency` con `cancel-in-progress` para abortar corridas redundantes.
+- **Trazabilidad / Mantenibilidad** → nombres descriptivos, reportes subidos como artefactos, resumen en el *job summary*, Dependabot manteniendo todo al día.
+
+> **Recomendación:** activar en *Settings → Branches* una regla de protección para `main` que exija
+> que el workflow **CI** pase antes de permitir el *merge* de un PR.
+
 ## Próximos pasos sugeridos
 
 - [ ] Implementar extractores reales de metadatos (ffprobe/Tika/metadata-extractor).

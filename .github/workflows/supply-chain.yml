@@ -1,0 +1,96 @@
+# -----------------------------------------------------------------------------
+# OmniStream · Supply Chain (Cadena de suministro)
+#
+# Protege frente a dependencias vulnerables o con licencias problematicas.
+#   - dependency-review: en cada PR, compara las dependencias nuevas/cambiadas
+#     contra la base de datos de avisos de GitHub y bloquea las criticas.
+#   - owasp-check: escaneo programado de CVE conocidas en las dependencias.
+#
+# Ejes: Seguridad (cadena de suministro) + Confiabilidad + Trazabilidad.
+# -----------------------------------------------------------------------------
+name: Supply Chain
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supply-chain-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Solo aplica a PRs: revisa el diff de dependencias antes de integrar.
+  dependency-review:
+    name: Dependency Review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write # para comentar el resumen en el PR
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@3b139cfc5fae8b618d3eae3675e383bb1769c019 # v4.5.0
+        with:
+          # Calidad/Seguridad: falla si entra una dependencia con severidad alta o mayor.
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure
+
+  # Escaneo profundo de CVE con OWASP (programado o manual para no frenar PRs).
+  owasp-check:
+    name: OWASP Dependency-Check
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4.6.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Resolver dependencias (poblar cache local)
+        run: mvn --batch-mode --no-transfer-progress -DskipTests dependency:go-offline
+
+      - name: OWASP Dependency-Check
+        uses: dependency-check/Dependency-Check_Action@3102a65fd5f36d0000297576acc56a475b0de98d # v4.1.0
+        with:
+          project: OmniStream
+          path: '.'
+          format: 'HTML'
+          # Confiabilidad: falla solo ante CVE de severidad alta (CVSS >= 7).
+          args: >-
+            --failOnCVSS 7
+            --enableRetired
+
+      - name: Upload OWASP report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        with:
+          name: owasp-dependency-check-report
+          path: reports
+          retention-days: 14
+          if-no-files-found: ignore

@@ -1,0 +1,45 @@
+# -----------------------------------------------------------------------------
+# OmniStream · Dependabot
+#
+# Mantiene actualizadas y seguras las dependencias (Maven) y las propias
+# GitHub Actions. Abre PRs automaticos que el CI valida antes de integrar.
+#
+# Ejes: Seguridad (parches de CVE) + Mantenibilidad + Trazabilidad.
+# -----------------------------------------------------------------------------
+version: 2
+updates:
+  # Dependencias Java del proyecto Maven multi-modulo.
+  - package-ecosystem: maven
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - java
+    commit-message:
+      prefix: "deps"
+    # Agrupa parches menores para reducir ruido de PRs (mantenibilidad).
+    groups:
+      spring-boot:
+        patterns:
+          - "org.springframework.boot:*"
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  # Las versiones de las actions usadas en los workflows (cadena de suministro).
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: "ci"
