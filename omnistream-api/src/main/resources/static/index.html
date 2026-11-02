@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OmniStream | Guía rápida</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0b1020;
+            --card: rgba(20, 29, 55, .82);
+            --text: #edf2ff;
+            --muted: #aab6d3;
+            --primary: #7c6cff;
+            --secondary: #20d3c2;
+            --line: rgba(255,255,255,.12);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            font: 16px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at 15% 10%, #27336d 0, transparent 35%),
+                        radial-gradient(circle at 90% 15%, #124f61 0, transparent 30%), var(--bg);
+        }
+        main { width: min(1050px, 92%); margin: auto; padding: 64px 0; }
+        .hero { display: flex; justify-content: space-between; gap: 32px; align-items: end; margin-bottom: 36px; }
+        .eyebrow { color: var(--secondary); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+        h1 { margin: 8px 0; font-size: clamp(2.4rem, 6vw, 4.8rem); line-height: 1; }
+        h2 { margin-top: 0; }
+        p { color: var(--muted); }
+        .badge { padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
+        .card { padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); box-shadow: 0 18px 50px rgba(0,0,0,.2); }
+        .number { display: inline-grid; place-items: center; width: 34px; height: 34px; margin-bottom: 10px; border-radius: 50%; background: var(--primary); font-weight: 700; }
+        code, pre { font-family: "SFMono-Regular", Consolas, monospace; }
+        pre { overflow-x: auto; margin: 14px 0 0; padding: 16px; border: 1px solid var(--line); border-radius: 12px; color: #d7ddff; background: #080c18; font-size: .84rem; }
+        .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+        a { color: var(--text); text-decoration: none; }
+        .button { padding: 10px 16px; border-radius: 10px; background: var(--primary); font-weight: 700; }
+        .button.alt { background: transparent; border: 1px solid var(--line); }
+        footer { margin-top: 34px; color: var(--muted); font-size: .9rem; }
+        @media (max-width: 650px) { .hero { display: block; } .badge { display: inline-block; margin-top: 18px; } }
+    </style>
+</head>
+<body>
+<main>
+    <section class="hero">
+        <div>
+            <div class="eyebrow">API REST · Java 25</div>
+            <h1>OmniStream</h1>
+            <p>Tu servidor multimedia está funcionando. Prueba los endpoints desde la terminal o desde tu cliente favorito.</p>
+        </div>
+        <div class="badge">● Servidor activo · :8080</div>
+    </section>
+
+    <section class="grid">
+        <article class="card">
+            <span class="number">1</span>
+            <h2>Indexar un recurso</h2>
+            <p>Registra un video, imagen, audio o texto en memoria.</p>
+            <pre>curl -X POST http://localhost:8080/api/recursos \
+  -H 'Content-Type: application/json' \
+  -d '{"nombre":"Vacaciones","rutaArchivo":"/media/v.mp4","extension":"mp4","tamanoBytes":1048576}'</pre>
+        </article>
+        <article class="card">
+            <span class="number">2</span>
+            <h2>Buscar recursos</h2>
+            <p>Consulta todo lo indexado o filtra por tipo y nombre.</p>
+            <pre>curl "http://localhost:8080/api/recursos"
+curl "http://localhost:8080/api/recursos?tipo=VIDEO"</pre>
+        </article>
+        <article class="card">
+            <span class="number">3</span>
+            <h2>Controlar reproducción</h2>
+            <p>Usa el <code>id</code> devuelto al indexar un recurso.</p>
+            <pre>curl -X POST http://localhost:8080/api/reproduccion \
+  -H 'Content-Type: application/json' \
+  -d '{"idRecurso":"ID_DEL_RECURSO","comando":"REPRODUCIR"}'</pre>
+        </article>
+    </section>
+
+    <div class="links">
+        <a class="button" href="/api/recursos">Ver recursos indexados</a>
+        <a class="button alt" href="https://github.com/HelberthGM/OmniStream" target="_blank" rel="noreferrer">Ver documentación</a>
+    </div>
+    <footer>Nota: los recursos se almacenan en memoria y se pierden al reiniciar la aplicación.</footer>
+</main>
+</body>
+</html>

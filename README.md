@@ -96,6 +96,9 @@ mvn clean install
 mvn -pl omnistream-api spring-boot:run
 ```
 
+Abre [http://localhost:8080](http://localhost:8080) para ver una guía rápida con ejemplos
+de uso. La página `/` también incluye un enlace para consultar los recursos indexados.
+
 ### Endpoints REST iniciales
 
 | Método | Ruta | Descripción |
