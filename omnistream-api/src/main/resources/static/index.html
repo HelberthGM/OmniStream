@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OmniStream | Guía rápida</title>
+    <title>OmniStream | Panel</title>
     <style>
         :root {
             color-scheme: dark;
@@ -13,7 +13,9 @@
             --muted: #aab6d3;
             --primary: #7c6cff;
             --secondary: #20d3c2;
-            --line: rgba(255,255,255,.12);
+            --line: rgba(255, 255, 255, .12);
+            --ok: #37d67a;
+            --warn: #ffb020;
         }
         * { box-sizing: border-box; }
         body {
@@ -24,68 +26,236 @@
             background: radial-gradient(circle at 15% 10%, #27336d 0, transparent 35%),
                         radial-gradient(circle at 90% 15%, #124f61 0, transparent 30%), var(--bg);
         }
-        main { width: min(1050px, 92%); margin: auto; padding: 64px 0; }
-        .hero { display: flex; justify-content: space-between; gap: 32px; align-items: end; margin-bottom: 36px; }
+        main { width: min(1100px, 92%); margin: auto; padding: 48px 0; }
+        .hero { display: flex; justify-content: space-between; gap: 32px; align-items: end; margin-bottom: 28px; }
         .eyebrow { color: var(--secondary); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-        h1 { margin: 8px 0; font-size: clamp(2.4rem, 6vw, 4.8rem); line-height: 1; }
-        h2 { margin-top: 0; }
+        h1 { margin: 8px 0; font-size: clamp(2.2rem, 6vw, 4rem); line-height: 1; }
+        h2 { margin: 0 0 14px; font-size: 1.1rem; }
         p { color: var(--muted); }
         .badge { padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
-        .card { padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); box-shadow: 0 18px 50px rgba(0,0,0,.2); }
-        .number { display: inline-grid; place-items: center; width: 34px; height: 34px; margin-bottom: 10px; border-radius: 50%; background: var(--primary); font-weight: 700; }
-        code, pre { font-family: "SFMono-Regular", Consolas, monospace; }
-        pre { overflow-x: auto; margin: 14px 0 0; padding: 16px; border: 1px solid var(--line); border-radius: 12px; color: #d7ddff; background: #080c18; font-size: .84rem; }
-        .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-        a { color: var(--text); text-decoration: none; }
-        .button { padding: 10px 16px; border-radius: 10px; background: var(--primary); font-weight: 700; }
-        .button.alt { background: transparent; border: 1px solid var(--line); }
-        footer { margin-top: 34px; color: var(--muted); font-size: .9rem; }
-        @media (max-width: 650px) { .hero { display: block; } .badge { display: inline-block; margin-top: 18px; } }
+        .badge.ok { color: var(--ok); }
+        .layout { display: grid; grid-template-columns: 1.1fr 1.9fr; gap: 18px; align-items: start; }
+        .card { padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: var(--card); box-shadow: 0 18px 50px rgba(0, 0, 0, .2); }
+        label { display: block; margin: 10px 0 4px; font-size: .82rem; color: var(--muted); }
+        input, select {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px;
+            background: #080c18; color: var(--text); font: inherit;
+        }
+        .row { display: flex; gap: 10px; }
+        .row > * { flex: 1; }
+        button {
+            margin-top: 14px; padding: 11px 16px; border: 0; border-radius: 10px;
+            background: var(--primary); color: #fff; font: inherit; font-weight: 700; cursor: pointer;
+        }
+        button.alt { background: transparent; border: 1px solid var(--line); margin-top: 0; }
+        button.mini { margin: 0; padding: 6px 12px; font-size: .8rem; }
+        button:hover { filter: brightness(1.1); }
+        .toolbar { display: flex; gap: 10px; margin-bottom: 16px; }
+        .toolbar select, .toolbar input { margin: 0; }
+        .list { display: grid; gap: 12px; }
+        .item { padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: #0b1226; }
+        .item header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .item h3 { margin: 0; font-size: 1rem; }
+        .tipo { font-size: .72rem; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--secondary); }
+        .meta { margin: 8px 0 0; font-size: .78rem; color: var(--muted); word-break: break-word; }
+        .controls { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+        .estado { margin-left: auto; font-size: .78rem; padding: 4px 10px; border-radius: 999px; background: #080c18; border: 1px solid var(--line); }
+        .estado.REPRODUCIENDO { color: var(--ok); }
+        .estado.PAUSADO { color: var(--warn); }
+        .empty { color: var(--muted); text-align: center; padding: 30px 0; }
+        footer { margin-top: 26px; color: var(--muted); font-size: .85rem; }
+        a { color: var(--secondary); }
+        @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } .hero { display: block; } .badge { display: inline-block; margin-top: 14px; } }
     </style>
 </head>
 <body>
 <main>
     <section class="hero">
         <div>
-            <div class="eyebrow">API REST · Java 25</div>
+            <div class="eyebrow">Gestor multimedia · Java 25 · API REST</div>
             <h1>OmniStream</h1>
-            <p>Tu servidor multimedia está funcionando. Prueba los endpoints desde la terminal o desde tu cliente favorito.</p>
+            <p>Indexa, busca y reproduce tus recursos multimedia. Todo corre contra la API REST del servidor.</p>
         </div>
-        <div class="badge">● Servidor activo · :8080</div>
+        <div class="badge ok" id="estado-servidor">● Conectando…</div>
     </section>
 
-    <section class="grid">
+    <section class="layout">
+        <!-- Columna izquierda: indexar -->
         <article class="card">
-            <span class="number">1</span>
-            <h2>Indexar un recurso</h2>
-            <p>Registra un video, imagen, audio o texto en memoria.</p>
-            <pre>curl -X POST http://localhost:8080/api/recursos \
-  -H 'Content-Type: application/json' \
-  -d '{"nombre":"Vacaciones","rutaArchivo":"/media/v.mp4","extension":"mp4","tamanoBytes":1048576}'</pre>
+            <h2>➕ Indexar recurso</h2>
+            <p style="margin-top:-6px">Registra un nuevo archivo. OmniStream deduce el tipo por la extensión y extrae sus metadatos.</p>
+            <form id="form-indexar">
+                <label for="nombre">Nombre</label>
+                <input id="nombre" required placeholder="Ej. Documental naturaleza">
+                <label for="ruta">Ruta del archivo</label>
+                <input id="ruta" required placeholder="/media/videos/doc.mp4">
+                <div class="row">
+                    <div>
+                        <label for="extension">Extensión</label>
+                        <input id="extension" required placeholder="mp4, jpg, mp3, pdf…">
+                    </div>
+                    <div>
+                        <label for="tamano">Tamaño (MB)</label>
+                        <input id="tamano" type="number" min="0" step="0.1" value="100">
+                    </div>
+                </div>
+                <button type="submit">Indexar recurso</button>
+            </form>
+            <p id="msg-indexar" class="meta"></p>
         </article>
+
+        <!-- Columna derecha: buscar + lista -->
         <article class="card">
-            <span class="number">2</span>
-            <h2>Buscar recursos</h2>
-            <p>Consulta todo lo indexado o filtra por tipo y nombre.</p>
-            <pre>curl "http://localhost:8080/api/recursos"
-curl "http://localhost:8080/api/recursos?tipo=VIDEO"</pre>
-        </article>
-        <article class="card">
-            <span class="number">3</span>
-            <h2>Controlar reproducción</h2>
-            <p>Usa el <code>id</code> devuelto al indexar un recurso.</p>
-            <pre>curl -X POST http://localhost:8080/api/reproduccion \
-  -H 'Content-Type: application/json' \
-  -d '{"idRecurso":"ID_DEL_RECURSO","comando":"REPRODUCIR"}'</pre>
+            <h2>🔎 Recursos indexados</h2>
+            <div class="toolbar">
+                <select id="filtro-tipo">
+                    <option value="">Todos los tipos</option>
+                    <option value="VIDEO">Video</option>
+                    <option value="IMAGEN">Imagen</option>
+                    <option value="AUDIO">Audio</option>
+                    <option value="TEXTO">Texto</option>
+                </select>
+                <input id="filtro-nombre" placeholder="Buscar por nombre…">
+                <button class="alt mini" id="btn-refrescar" type="button">Refrescar</button>
+            </div>
+            <div class="list" id="lista"></div>
         </article>
     </section>
 
-    <div class="links">
-        <a class="button" href="/api/recursos">Ver recursos indexados</a>
-        <a class="button alt" href="https://github.com/HelberthGM/OmniStream" target="_blank" rel="noreferrer">Ver documentación</a>
-    </div>
-    <footer>Nota: los recursos se almacenan en memoria y se pierden al reiniciar la aplicación.</footer>
+    <footer>
+        Los recursos se almacenan en memoria y se recargan al reiniciar el servidor.
+        · <a href="https://github.com/HelberthGM/OmniStream" target="_blank" rel="noreferrer">Documentación en GitHub</a>
+    </footer>
 </main>
+
+<script>
+    const API = "/api";
+
+    const fmtTamano = (bytes) => {
+        if (bytes == null) return "—";
+        const mb = bytes / (1024 * 1024);
+        return mb >= 1024 ? (mb / 1024).toFixed(2) + " GB" : mb.toFixed(1) + " MB";
+    };
+
+    const iconoTipo = (t) => ({ VIDEO: "🎬", IMAGEN: "🖼️", AUDIO: "🎵", TEXTO: "📄" }[t] || "📦");
+
+    // Verifica conexión con el servidor.
+    async function verificarServidor() {
+        const el = document.getElementById("estado-servidor");
+        try {
+            await fetch(`${API}/recursos`);
+            el.textContent = "● Servidor activo · :8080";
+            el.classList.add("ok");
+        } catch {
+            el.textContent = "● Sin conexión";
+            el.classList.remove("ok");
+        }
+    }
+
+    // Lista/busca recursos aplicando los filtros actuales.
+    async function cargarRecursos() {
+        const tipo = document.getElementById("filtro-tipo").value;
+        const nombre = document.getElementById("filtro-nombre").value.trim();
+        const params = new URLSearchParams();
+        if (tipo) params.set("tipo", tipo);
+        if (nombre) params.set("nombre", nombre);
+
+        const lista = document.getElementById("lista");
+        try {
+            const res = await fetch(`${API}/recursos?${params}`);
+            const recursos = await res.json();
+            if (!recursos.length) {
+                lista.innerHTML = `<p class="empty">No hay recursos que coincidan con la búsqueda.</p>`;
+                return;
+            }
+            lista.innerHTML = recursos.map(renderItem).join("");
+        } catch (e) {
+            lista.innerHTML = `<p class="empty">No se pudo contactar la API.</p>`;
+        }
+    }
+
+    function renderItem(r) {
+        const metas = Object.entries(r.metadatos || {})
+            .filter(([, v]) => v !== null && v !== undefined)
+            .map(([k, v]) => `${k}=${v}`)
+            .join(" · ");
+        return `
+        <div class="item" data-id="${r.id}">
+            <header>
+                <h3>${iconoTipo(r.tipo)} ${r.nombre}</h3>
+                <span class="tipo">${r.tipo}</span>
+            </header>
+            <p class="meta">.${r.extension} · ${fmtTamano(r.metadatos?.tamanoBytes)} · <code>${r.id.slice(0, 8)}</code></p>
+            ${metas ? `<p class="meta">${metas}</p>` : ""}
+            <div class="controls">
+                <button class="mini" data-cmd="REPRODUCIR">▶ Reproducir</button>
+                <button class="alt mini" data-cmd="PAUSAR">⏸ Pausar</button>
+                <button class="alt mini" data-cmd="DETENER">⏹ Detener</button>
+                <span class="estado DETENIDO">DETENIDO</span>
+            </div>
+        </div>`;
+    }
+
+    // Indexar: POST /api/recursos
+    document.getElementById("form-indexar").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const msg = document.getElementById("msg-indexar");
+        const body = {
+            nombre: document.getElementById("nombre").value.trim(),
+            rutaArchivo: document.getElementById("ruta").value.trim(),
+            extension: document.getElementById("extension").value.trim().replace(/^\./, ""),
+            tamanoBytes: Math.round(parseFloat(document.getElementById("tamano").value || "0") * 1024 * 1024)
+        };
+        try {
+            const res = await fetch(`${API}/recursos`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+            if (res.status === 201) {
+                const r = await res.json();
+                msg.style.color = "var(--ok)";
+                msg.textContent = `✔ Indexado "${r.nombre}" como ${r.tipo}.`;
+                e.target.reset();
+                document.getElementById("tamano").value = "100";
+                cargarRecursos();
+            } else {
+                msg.style.color = "var(--warn)";
+                msg.textContent = "⚠ Extensión no soportada. Usa mp4, jpg, mp3, pdf, etc.";
+            }
+        } catch {
+            msg.style.color = "var(--warn)";
+            msg.textContent = "⚠ No se pudo contactar la API.";
+        }
+    });
+
+    // Reproducción: POST /api/reproduccion (delegación a la máquina de estados del servidor)
+    document.getElementById("lista").addEventListener("click", async (e) => {
+        const btn = e.target.closest("button[data-cmd]");
+        if (!btn) return;
+        const item = btn.closest(".item");
+        const id = item.dataset.id;
+        try {
+            const res = await fetch(`${API}/reproduccion`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idRecurso: id, comando: btn.dataset.cmd })
+            });
+            const data = await res.json();
+            const span = item.querySelector(".estado");
+            span.textContent = data.estado;
+            span.className = "estado " + data.estado;
+        } catch { /* silencioso en la demo */ }
+    });
+
+    // Filtros en vivo.
+    document.getElementById("filtro-tipo").addEventListener("change", cargarRecursos);
+    document.getElementById("filtro-nombre").addEventListener("input", cargarRecursos);
+    document.getElementById("btn-refrescar").addEventListener("click", cargarRecursos);
+
+    // Inicio.
+    verificarServidor();
+    cargarRecursos();
+</script>
 </body>
 </html>

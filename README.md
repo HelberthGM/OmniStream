@@ -11,6 +11,67 @@ reproducir recursos (video, imagen, audio, texto) de forma autónoma, segura y p
 
 ---
 
+## 🚀 Cómo usarlo (demo funcional)
+
+Esta entrega incluye una **demo funcional end-to-end**: al arrancar, el servidor carga 8 recursos
+de ejemplo y expone un **panel web interactivo** para indexar, buscar y reproducir, además de la
+API REST.
+
+### 1. Requisitos
+- **JDK 21 o superior** (el proyecto compila con `--release 21`; probado también en JDK 25).
+- **Maven 3.9+**.
+- Conexión a internet la **primera** vez (para descargar Spring Boot desde Maven Central).
+
+### 2. Levantar el servidor
+
+```bash
+# Desde la raíz del proyecto
+mvn spring-boot:run -pl omnistream-api
+```
+
+Cuando veas en consola `[OmniStream] 8 recursos de ejemplo indexados y listos.` el servidor está arriba.
+
+### 3. Abrir el panel
+
+Abre en el navegador: **http://localhost:8080**
+
+Verás un panel donde puedes, **sin usar la terminal**:
+- **Indexar** un recurso nuevo (deduce el tipo por la extensión y extrae metadatos).
+- **Buscar / filtrar** por tipo y por nombre, en vivo.
+- **Reproducir / Pausar / Detener** cada recurso y ver cómo cambia su estado
+  (`DETENIDO → REPRODUCIENDO → PAUSADO → …`), que es la máquina de estados del dominio.
+
+> Los datos viven en memoria: se recargan los 8 ejemplos en cada reinicio.
+
+### 4. Probar la API REST directamente (opcional)
+
+```bash
+# Indexar un recurso
+curl -X POST http://localhost:8080/api/recursos \
+  -H 'Content-Type: application/json' \
+  -d '{"nombre":"Vacaciones","rutaArchivo":"/media/v.mp4","extension":"mp4","tamanoBytes":1048576}'
+
+# Listar / buscar
+curl "http://localhost:8080/api/recursos"
+curl "http://localhost:8080/api/recursos?tipo=VIDEO"
+curl "http://localhost:8080/api/recursos?nombre=podcast"
+
+# Controlar reproducción (usa un id devuelto al indexar/listar)
+curl -X POST http://localhost:8080/api/reproduccion \
+  -H 'Content-Type: application/json' \
+  -d '{"idRecurso":"ID_DEL_RECURSO","comando":"REPRODUCIR"}'
+```
+
+### 5. Qué patrón P-rS se demuestra en cada acción
+
+| Acción en la demo | Patrón(es) P-rS que se ejecuta(n) |
+|-------------------|-----------------------------------|
+| Indexar un recurso | **Instanciación** (crea el pipeline por tipo) → **Aportación** (extrae metadatos) → **Instalación** (lo registra) |
+| Buscar / filtrar | **Selección** (criterios combinables) |
+| Reproducir / pausar / detener | **Maquinación** (máquina de estados) |
+
+---
+
 ## Stack técnico
 
 | Área | Elección | Motivo |
@@ -103,6 +164,7 @@ de uso. La página `/` también incluye un enlace para consultar los recursos in
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
+| `GET`  | `/` | Panel web interactivo (demo) |
 | `POST` | `/api/recursos` | Indexa un recurso (corre el pipeline de metadatos y lo registra) |
 | `GET`  | `/api/recursos?tipo=VIDEO&nombre=vac` | Busca/filtra recursos indexados |
 | `POST` | `/api/reproduccion` | Aplica un comando (`REPRODUCIR`/`PAUSAR`/`DETENER`) a un recurso |
