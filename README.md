@@ -26,10 +26,23 @@ API REST.
 
 ```bash
 # Desde la raíz del proyecto
+# 1) Compila e instala TODOS los módulos en el repositorio local (~/.m2)
+mvn clean install -DskipTests
+
+# 2) Levanta la API usando esos artefactos recién instalados
 mvn spring-boot:run -pl omnistream-api
 ```
 
+> **Importante:** el paso 1 no es opcional la primera vez ni después de cambiar código en
+> `omnistream-domain`, `omnistream-application` o `omnistream-patterns`. Si ejecutas solo
+> `mvn spring-boot:run -pl omnistream-api`, Maven resuelve esos módulos desde `~/.m2` y puede
+> usar **jars viejos**, haciendo que la lista aparezca vacía o que la API devuelva `500`.
+
 Cuando veas en consola `[OmniStream] 8 recursos de ejemplo indexados y listos.` el servidor está arriba.
+
+> **¿La interfaz sale vacía o la API devuelve 500?** Casi siempre es un artefacto viejo en el
+> repositorio local. Detén el servidor y ejecuta `mvn clean install -DskipTests` desde la raíz;
+> luego vuelve a levantarlo.
 
 ### 3. Abrir el panel
 
