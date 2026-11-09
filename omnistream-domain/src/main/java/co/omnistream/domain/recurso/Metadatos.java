@@ -1,5 +1,6 @@
 package co.omnistream.domain.recurso;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -40,10 +41,11 @@ public class Metadatos {
     }
 
     /**
-     * @return vista de solo lectura de todos los metadatos
+     * @return vista de solo lectura de todos los metadatos. Admite valores {@code null}
+     *         (algunos extractores aun no completan ciertas claves).
      */
     public Map<String, Object> comoMapa() {
-        return Map.copyOf(valores);
+        return Collections.unmodifiableMap(new LinkedHashMap<>(valores));
     }
 
     @Override

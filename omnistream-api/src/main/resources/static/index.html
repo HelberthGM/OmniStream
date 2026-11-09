@@ -80,26 +80,16 @@
     </section>
 
     <section class="layout">
-        <!-- Columna izquierda: indexar -->
+        <!-- Columna izquierda: adjuntar archivo -->
         <article class="card">
-            <h2>➕ Indexar recurso</h2>
-            <p style="margin-top:-6px">Registra un nuevo archivo. OmniStream deduce el tipo por la extensión y extrae sus metadatos.</p>
-            <form id="form-indexar">
-                <label for="nombre">Nombre</label>
-                <input id="nombre" required placeholder="Ej. Documental naturaleza">
-                <label for="ruta">Ruta del archivo</label>
-                <input id="ruta" required placeholder="/media/videos/doc.mp4">
-                <div class="row">
-                    <div>
-                        <label for="extension">Extensión</label>
-                        <input id="extension" required placeholder="mp4, jpg, mp3, pdf…">
-                    </div>
-                    <div>
-                        <label for="tamano">Tamaño (MB)</label>
-                        <input id="tamano" type="number" min="0" step="0.1" value="100">
-                    </div>
-                </div>
-                <button type="submit">Indexar recurso</button>
+            <h2>📎 Adjuntar recurso</h2>
+            <p style="margin-top:-6px">Selecciona un archivo de tu equipo. OmniStream deduce el nombre, el tipo (por la extensión) y el tamaño, y extrae sus metadatos.</p>
+            <form id="form-upload">
+                <label for="archivo">Archivo</label>
+                <input id="archivo" name="archivo" type="file" required
+                       accept=".mp4,.mkv,.avi,.mov,.webm,.jpg,.jpeg,.png,.gif,.bmp,.webp,.mp3,.wav,.flac,.aac,.ogg,.txt,.md,.pdf,.epub,.doc,.docx">
+                <p id="archivo-info" class="meta"></p>
+                <button type="submit">Adjuntar e indexar</button>
             </form>
             <p id="msg-indexar" class="meta"></p>
         </article>
@@ -196,28 +186,31 @@
         </div>`;
     }
 
-    // Indexar: POST /api/recursos
-    document.getElementById("form-indexar").addEventListener("submit", async (e) => {
+    // Muestra info del archivo seleccionado antes de subirlo.
+    document.getElementById("archivo").addEventListener("change", (e) => {
+        const info = document.getElementById("archivo-info");
+        const f = e.target.files[0];
+        info.textContent = f ? `${f.name} · ${fmtTamano(f.size)}` : "";
+    });
+
+    // Adjuntar e indexar: POST /api/recursos/upload (multipart)
+    document.getElementById("form-upload").addEventListener("submit", async (e) => {
         e.preventDefault();
         const msg = document.getElementById("msg-indexar");
-        const body = {
-            nombre: document.getElementById("nombre").value.trim(),
-            rutaArchivo: document.getElementById("ruta").value.trim(),
-            extension: document.getElementById("extension").value.trim().replace(/^\./, ""),
-            tamanoBytes: Math.round(parseFloat(document.getElementById("tamano").value || "0") * 1024 * 1024)
-        };
+        const input = document.getElementById("archivo");
+        const f = input.files[0];
+        if (!f) return;
+
+        const data = new FormData();
+        data.append("archivo", f);
         try {
-            const res = await fetch(`${API}/recursos`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
+            const res = await fetch(`${API}/recursos/upload`, { method: "POST", body: data });
             if (res.status === 201) {
                 const r = await res.json();
                 msg.style.color = "var(--ok)";
-                msg.textContent = `✔ Indexado "${r.nombre}" como ${r.tipo}.`;
+                msg.textContent = `✔ Adjuntado "${r.nombre}" como ${r.tipo}.`;
                 e.target.reset();
-                document.getElementById("tamano").value = "100";
+                document.getElementById("archivo-info").textContent = "";
                 cargarRecursos();
             } else {
                 msg.style.color = "var(--warn)";

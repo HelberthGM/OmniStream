@@ -79,6 +79,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.16.0</version>
+                    <configuration>
+                        <!-- Conserva los nombres de parametros en el bytecode. Spring los
+                             necesita para resolver @RequestParam/@PathVariable por reflexion. -->
+                        <parameters>true</parameters>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>

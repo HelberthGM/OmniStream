@@ -36,7 +36,7 @@ Cuando veas en consola `[OmniStream] 8 recursos de ejemplo indexados y listos.` 
 Abre en el navegador: **http://localhost:8080**
 
 Verás un panel donde puedes, **sin usar la terminal**:
-- **Indexar** un recurso nuevo (deduce el tipo por la extensión y extrae metadatos).
+- **Adjuntar** un archivo desde tu equipo (el servidor deduce nombre, tipo y tamaño, y extrae metadatos).
 - **Buscar / filtrar** por tipo y por nombre, en vivo.
 - **Reproducir / Pausar / Detener** cada recurso y ver cómo cambia su estado
   (`DETENIDO → REPRODUCIENDO → PAUSADO → …`), que es la máquina de estados del dominio.
@@ -46,7 +46,11 @@ Verás un panel donde puedes, **sin usar la terminal**:
 ### 4. Probar la API REST directamente (opcional)
 
 ```bash
-# Indexar un recurso
+# Adjuntar un archivo (recomendado): deduce nombre, tipo y tamaño
+curl -X POST http://localhost:8080/api/recursos/upload \
+  -F "archivo=@/ruta/a/mi/video.mp4"
+
+# Indexar describiendo los datos a mano (alternativa JSON)
 curl -X POST http://localhost:8080/api/recursos \
   -H 'Content-Type: application/json' \
   -d '{"nombre":"Vacaciones","rutaArchivo":"/media/v.mp4","extension":"mp4","tamanoBytes":1048576}'
@@ -165,7 +169,8 @@ de uso. La página `/` también incluye un enlace para consultar los recursos in
 | Método | Ruta | Descripción |
 |--------|------|-------------|
 | `GET`  | `/` | Panel web interactivo (demo) |
-| `POST` | `/api/recursos` | Indexa un recurso (corre el pipeline de metadatos y lo registra) |
+| `POST` | `/api/recursos/upload` | **Adjunta un archivo** (multipart) y lo indexa |
+| `POST` | `/api/recursos` | Indexa un recurso describiendo sus datos (JSON) |
 | `GET`  | `/api/recursos?tipo=VIDEO&nombre=vac` | Busca/filtra recursos indexados |
 | `POST` | `/api/reproduccion` | Aplica un comando (`REPRODUCIR`/`PAUSAR`/`DETENER`) a un recurso |
 

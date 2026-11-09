@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: omnistream-api
+  servlet:
+    multipart:
+      # Permite adjuntar archivos de tamano razonable desde la interfaz.
+      max-file-size: 512MB
+      max-request-size: 512MB
 
 # OmniStream es auto-hospedado y orientado a funcionamiento offline.
 # La persistencia (SQLite/JPA) se incorpora en una iteracion posterior; por ahora el
